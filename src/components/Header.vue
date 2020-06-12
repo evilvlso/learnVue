@@ -7,7 +7,8 @@
               </div>
               <ul class="nav">
                   <li><router-link :to="{name:'Home'}">首页</router-link></li>
-                  <li v-for="item in channels" :key="item.channelId">
+                  <li v-if="isLoading">Loading...</li>
+                  <li v-for="item in data.slice(0, 5)" :key="item.channelId">
                     <router-link :to="{
                     name:'ChannelNews',
                     params:{id:item.channelId},
@@ -24,18 +25,24 @@
 </template>
 
 <script>
-import {getNews} from "@/services/getNews"
+import {mapState} from "vuex"
 export default {
-data(){
-  return {
-    channels :[],
-  }
-},
-created () {
-  getNews().then((resp)=>{
-    this.channels = resp.splice(0,5);
-  });
-},
+// data(){
+//   return {
+    // channels :[],  配置共享库 从data中获取数据
+//   }
+// },
+computed:
+ mapState("newsChannels",["isLoading","data"])
+,
+//因为配置共享库所以直接监听data数据
+// created () {
+  // // getNews().then((resp)=>{
+  // //   this.channels = resp.slice(0,5);
+  // // });
+  // this.$store.dispatch("newsChannels/fetchNews");
+
+// },
 }
 </script>
 

@@ -1,10 +1,14 @@
 <template>
   <div class="news-types" v-show="showChaneels.length > 0">
-    <div v-for="item in showChaneels" :key="item.channelId" class="item" 
-    @click="switchActive(item.channelId)" 
-    :class="{
-      active : isActive===item.channelId
-    }">
+    <div
+      v-for="item in showChaneels"
+      :key="item.channelId"
+      class="item"
+      @click="switchActive(item.channelId)"
+      :class="{
+        active: isActive === item.channelId,
+      }"
+    >
       <span class="name">{{ item.name }}</span>
     </div>
     <div @click.prevent="isCollapse = !isCollapse" class="item">
@@ -14,42 +18,52 @@
 </template>
 
 <script>
-import { getNews } from "@/services/getNews";
-
+import { mapState } from "vuex";
 export default {
-  created() {
-    getNews().then((resp) => {
-      this.channels = resp;
-      this.switchActive(resp[0].channelId);
-    });
+  // 使用数据库，换成watch
+  // created() {
+  //   getNews().then((resp) => {
+  //     this.da = resp;
+  //     this.switchActive(resp[0].channelId);
+  //   });
+  // },
+  watch: {
+    data: {
+      immediate: true,
+      handler() {
+        if (this.data.length > 0) {
+          this.switchActive(this.data[0].channelId);
+        }
+      },
+    },
   },
-
   computed: {
+    ...mapState("newsChannels", ["data"]),
+
     showChaneels() {
       if (this.isCollapse) {
         // 折叠状态
-        return this.channels.slice(0, 7); //折叠状态只需要显示8个数据
+        return this.data.slice(0, 7); //折叠状态只需要显示8个数据
       } else {
         // 展开状态
-        return this.channels;
+        return this.data;
       }
     },
   },
-  methods :{
-    switchActive(channelid){
-        this.isActive = channelid;
-        this.$emit("changeid",this.isActive);
+  methods: {
+    switchActive(channelid) {
+      this.isActive = channelid;
+      this.$emit("changeid", this.isActive);
     },
   },
   data() {
     return {
-      channels: [],
+      // channels: [],  用数据库中的data
       isCollapse: true,
-      isActive : 0,
+      isActive: 0,
     };
   },
 };
-
 </script>
 
 <style scoped>

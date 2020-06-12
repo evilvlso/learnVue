@@ -1,4 +1,4 @@
-var appcode=""
+var appcode="493df59c7e464f18a9d61b4e1b69eeb7"
 
 import axios from "axios"
 export async function getNews() {
@@ -21,6 +21,6 @@ export async  function newsDetail(channelId,page=1,limit=10){
         needAllList: false,
         needContent :1 ,
     }});
-    console.log(resp.data.showapi_res_body.pagebean)
+    // console.log(resp.data.showapi_res_body.pagebean)
     return resp.data.showapi_res_body.pagebean}
 
